@@ -1,111 +1,36 @@
-
-
 #include <Servo.h>
-#include <Wire.h>
-#include <LiquidCrystal_I2C.h>
 
+Servo motorLinks;      // servo voor linker flipper
+Servo motorRechts;     // servo voor rechter flipper
 
-
-
-// Waardes
-int levens = 3;
-long score = 0;
-
-// LCD
-LiquidCrystal_I2C lcd(0x27, 16, 2);
-
-// Startknop
-const int startKnop = 10;
-bool spelGestart = false;
-
-// Servo's
-Servo motorlinks;
-Servo motorrechts;
-
-const int flipperlinks = 11;
-const int flipperrechts = 10;
-
+int flipperlinks = 2;      // knop links
+int flipperrechts = 3;     // knop rechts
 
 void setup() {
-
-  Serial.begin(9600);
-
-
-  // Flippers
   pinMode(flipperlinks, INPUT_PULLUP);
   pinMode(flipperrechts, INPUT_PULLUP);
 
-  motorlinks.attach(9);
-  motorrechts.attach(8);
+  motorLinks.attach(9);     // servo links op pin 9
+  motorRechts.attach(10);   // servo rechts op pin 10
 
-  motorlinks.write(0);
-  motorrechts.write(0);
-
-  // Startknop
-  pinMode(startKnop, INPUT_PULLUP);
-
-  // LCD
-  lcd.init();
-  lcd.backlight();
-
-  lcd.setCursor(0, 0);
-  lcd.print("Rechter knop");
-
-  lcd.setCursor(0, 1);
-  lcd.print("voor start");
+  Serial.begin(9600);
 }
-
-
 
 void loop() {
+  int statusLinks = digitalRead(flipperlinks);
+  int statusRechts = digitalRead(flipperrechts);
 
-  // Wachten op start
-  if (!spelGestart) {
-
-    if (digitalRead(startKnop) == LOW) {
-
-      spelGestart = true;
-      score = 0;
-      levens = 3;
-
-      // Motor starten
-      digitalWrite(relaisPin, HIGH);
-
-      lcd.clear();
-      toonScore();
-      toonLevens();
-    }
-
-    return;
-  }
-void fliplinks() {
-  if (digitalRead(flipperlinks) == LOW) {
-    motorlinks.write(95);
+  // Linker flipper
+  if (statusLinks == LOW) {
+    motorLinks.write(95);     // ingedrukt → omhoog
   } else {
-    motorlinks.write(0);
+    motorLinks.write(0);      // niet ingedrukt → omlaag
   }
-}
 
-
-  if (digitalRead(flipperrechts) == LOW) {
-    motorrechts.write(0);
+  // Rechter flipper
+  if (statusRechts == LOW) {
+    motorRechts.write(95);
   } else {
-    motorrechts.write(95);
-}
-
-  lcd.setCursor(0, 0);
-  lcd.print("Score: ");
-  lcd.print(score);
-  lcd.print("      ");
-
-
-
-  lcd.setCursor(0, 1);                
-  lcd.print("Levens: ");
-  lcd.print(levens);
-  lcd.print("      ");
-
-       
-
-
+    motorRechts.write(0);
+  }
 }
