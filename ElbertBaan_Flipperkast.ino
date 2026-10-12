@@ -3,7 +3,7 @@
 #include <Servo.h>
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
-#include <MPU6050.h>
+
 
 // Netwerk
 String naam = "Elbert";
@@ -52,19 +52,12 @@ const int rechts = 47;
 unsigned long lastLedTime = 0;
 bool ledStand = false;
 
-//tilt
-MPU6050 mpu;
-const int tiltGrens = 17000;
-unsigned long lastTiltTime = 0;
-const unsigned long tiltCooldown = 2000;
+
 
 void setup() {
 
   Serial.begin(9600);
 
-  //tiltsensor
-  Wire.begin();
-   mpu.initialize();
 
   // Flippers
   pinMode(flipperlinks, INPUT_PULLUP);
@@ -194,20 +187,7 @@ void loop() {
   // LEDs
   ledverlichting();
 
-     // Tilt sensor MPU6050
-  int16_t ax, ay, az;
-  int16_t gx, gy, gz;
-
-  mpu.getMotion6(&ax, &ay, &az, &gx, &gy, &gz);
-
- if ((abs(gx) > 15000 || abs(gy) > 15000 || abs(gz) > 15000) &&
-    millis() - lastTiltTime > tiltCooldown)
-{
-      score -= 1000;
-      toonScore();
-
-    lastTiltTime = millis();
-}
+     
     
     
   // Score-sensor
