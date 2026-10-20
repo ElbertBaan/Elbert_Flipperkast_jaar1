@@ -250,24 +250,7 @@ void loop() {
         lcd.print("Score:");
         lcd.print(score);
 
-        // Score versturen bij GAME OVER
-        Serial.print(naam);
-        Serial.print(",");
-        Serial.print(score);
-        Serial.print(",");
-        Serial.println(machine);
-
-        delay(10000);
-        score = 0;
-        levens = 3;
-        spelGestart = false;
-
-        lcd.clear();
-        lcd.setCursor(0, 0);
-        lcd.print("Rechter knop");
-        lcd.setCursor(0, 1);
-        lcd.print("voor start");
-        return;
+       
 
         while (true) {
         }
